@@ -52,8 +52,9 @@ namespace Batch_Uploader
             this.Files = Files;
             this.CommonName = CommonName;
 
+            var CodeReceiver = Main.Config.PromptMode ? (ICodeReceiver)new FormCodeReceiver() : new LocalServerCodeReceiver();
 
-            GoogleWebAuthorizationBroker.AuthorizeAsync(ApiCredentials, Scopes, "BatchUploader", System.Threading.CancellationToken.None).ContinueWith((Credentials) => {
+            GoogleWebAuthorizationBroker.AuthorizeAsync(ApiCredentials, Scopes, "BatchUploader", System.Threading.CancellationToken.None, codeReceiver: CodeReceiver).ContinueWith((Credentials) => {
                 DriveReady = true;
                 UserCredentials = Credentials.Result;
 

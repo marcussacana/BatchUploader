@@ -286,10 +286,10 @@ namespace Batch_Uploader
             AdvancedIni.FastSave(Config, "Batch Uploader.ini");
         }
 
-        Settings Config = new Settings();
+        public static Settings Config = new Settings();
 
         [FieldParmaters(Name = "Settings")]
-        struct Settings {
+        public struct Settings {
 
             [FieldParmaters(Name = "BitlyApiKey")]
             public string BitlyApiKey;
@@ -299,6 +299,9 @@ namespace Batch_Uploader
 
             [FieldParmaters(Name = "DriveClientSecret")]
             public string DriveClientSecret;
+
+            [FieldParmaters(Name = "PromptMode")]
+            public bool PromptMode;
 
         }
 
