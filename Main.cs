@@ -67,7 +67,17 @@ namespace Batch_Uploader
 
             RefreshList();
 
-            tbAutoRename.Text = $"{FindCommonName()} - Vol.{{1:D2}}{Path.GetExtension(Files.First())}";
+            var CommonName = FindCommonName();
+
+            if (string.IsNullOrWhiteSpace(CommonName))
+                return;
+
+            var After = Path.GetFileNameWithoutExtension(Files.First()).Substring(CommonName.Length).Trim(' ', '.', '-').Split('.', ' ');
+            if (After.Length >= 1 && int.TryParse(After.First(), out int Begin))
+                tbAutoRename.Text = $"{CommonName} - Vol.{{{Begin}:D2}}{Path.GetExtension(Files.First())}";
+            else
+                tbAutoRename.Text = $"{CommonName} - Vol.{{1:D2}}{Path.GetExtension(Files.First())}";
+
         }
 
         private void RefreshList(int SelectedIndex = -1)
@@ -214,13 +224,15 @@ namespace Batch_Uploader
 
                     if (CurrentFile[y].Equals(BaseName[y], StringComparison.InvariantCultureIgnoreCase))
                         CurrentMatch++;
+                    else
+                        break;
                 }
 
                 if (CurrentMatch < ShortestMatch)
                     ShortestMatch = CurrentMatch;
             }
 
-            return string.Join(" ", from x in BaseName.Take(ShortestMatch) select x.ToCapital()).Trim();
+            return string.Join(" ", from x in BaseName.Take(ShortestMatch) select x.ToCapital()).Trim(' ', '-');
         }
         private string FindCommonName() => FindCommonName(Files.ToArray());
 
