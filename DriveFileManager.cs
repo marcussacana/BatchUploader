@@ -388,6 +388,10 @@ namespace DriveMirror
         }
 
         internal static async Task<File> GetOrCreateDirectory(this DriveService Service, string DirectoryPath, Drive Drive = null) {
+            
+            if (!DirectoryPath.EndsWith("/") && !DirectoryPath.EndsWith("\\"))
+                DirectoryPath += "/";
+
             var Parent = await Service.TranslatePath(DirectoryPath, Drive);
            
             if (Parent == null)

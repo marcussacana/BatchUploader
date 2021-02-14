@@ -52,6 +52,9 @@ namespace Batch_Uploader
             this.Files = Files;
             this.CommonName = CommonName;
 
+            if (!string.IsNullOrWhiteSpace(CommonName))
+                tbPath.Text = "My Drive:/" + CommonName;
+
             var CodeReceiver = Main.Config.PromptMode ? (ICodeReceiver)new FormCodeReceiver() : new LocalServerCodeReceiver();
 
             GoogleWebAuthorizationBroker.AuthorizeAsync(ApiCredentials, Scopes, "BatchUploader", System.Threading.CancellationToken.None, codeReceiver: CodeReceiver).ContinueWith((Credentials) => {
