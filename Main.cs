@@ -72,9 +72,19 @@ namespace Batch_Uploader
             if (string.IsNullOrWhiteSpace(CommonName))
                 return;
 
-            var After = Path.GetFileNameWithoutExtension(Files.First()).Substring(CommonName.Length).Trim(' ', '.', '-').Split('.', ' ');
-            if (After.Length >= 1 && int.TryParse(After.First(), out int Begin))
-                tbAutoRename.Text = $"{CommonName} - Vol.{{{Begin}:D2}}{Path.GetExtension(Files.First())}";
+            var VolStr = (from x in Files where x.Length > CommonName.Length select Path.GetFileNameWithoutExtension(x).Substring(CommonName.Length).Trim(' ', '.', '-').Split('.', ' ').First());
+
+            var Numbers = new List<int>();
+
+            foreach (var Vol in VolStr) {
+                if (int.TryParse(Vol, out int Rst))
+                    Numbers.Add(Rst);
+            }
+
+            Numbers.Sort();
+
+            if (Numbers.Count() > 0)
+                tbAutoRename.Text = $"{CommonName} - Vol.{{{Numbers.First()}:D2}}{Path.GetExtension(Files.First())}";
             else
                 tbAutoRename.Text = $"{CommonName} - Vol.{{1:D2}}{Path.GetExtension(Files.First())}";
 
