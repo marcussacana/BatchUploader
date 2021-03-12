@@ -195,10 +195,13 @@ namespace DriveMirror
             });
         }
 
-        internal static async Task<(IUploadProgress Progress, File CreatedFile)> UploadFile(this DriveService Service, System.IO.Stream File, string Name, File Directory = null, string MimeType = "application/octet-stream") {
+        internal static async Task<(IUploadProgress Progress, File CreatedFile)> UploadFile(this DriveService Service, System.IO.Stream File, string Name, File Directory = null, Drive SharedDrive = null, string MimeType = "application/octet-stream") {
             File NewFile = new File();
             NewFile.Name = Name;
-            
+
+            if (SharedDrive != null)
+                NewFile.DriveId = SharedDrive.Id;
+
             if (Directory != null)
             {
                 NewFile.Parents = new List<string>();

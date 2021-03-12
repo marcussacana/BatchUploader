@@ -84,7 +84,7 @@ namespace Batch_Uploader
 
             var Drive = (Drive)(await (from x in Service.EnumDrives() where x.Name.Equals(DriveName, StringComparison.InvariantCultureIgnoreCase) select x).SingleOrNothing());
 
-            var Directory = await Service.GetOrCreateDirectory(Path);
+            var Directory = await Service.GetOrCreateDirectory(Path, Drive);
 
             List<File> DriveFiles = new List<File>();
 
@@ -102,7 +102,7 @@ namespace Batch_Uploader
 
                 using (var Data = new System.IO.StreamReader(File.File).BaseStream)
                 {
-                    var Result = await Service.UploadFile(Data, File.Name, Directory);
+                    var Result = await Service.UploadFile(Data, File.Name, Directory, Drive);
                     if (Result.Progress.Status != Google.Apis.Upload.UploadStatus.Completed)
                         goto Retry;
 
